@@ -455,6 +455,8 @@ e. Format Log Pengiriman
 
 ###Soal 4
 
+###Soal 4
+
 a.  Registrasi dan Login Hunter
     
   ---
@@ -464,15 +466,18 @@ a.  Registrasi dan Login Hunter
   hunter_data->hp = 100;
   hunter_data->def = 5;
   ---
+  ![Screenshot 2025-05-08 225035](https://github.com/user-attachments/assets/27e65699-8b77-405f-b437-519a2ae88fe7)
+
 b. Menampilkan Semua Data Hunter 
     Admin bisa melihat semua hunter yang terdaftar lengkap dengan stat dan status    banned.
     
-    ---
-    printf("Nama: %s | Level: %d | EXP: %d | ATK: %d | HP: %d | DEF: %d | Status: % s\n",
+  ---
+  printf("Nama: %s | Level: %d | EXP: %d | ATK: %d | HP: %d | DEF: %d | Status: % s\n",
        data[i].name, data[i].level, data[i].exp,
        data[i].atk, data[i].hp, data[i].def,
        data[i].banned ? "Banned" : "Aktif");
-    ---
+  ---
+  ![image](https://github.com/user-attachments/assets/cb53eaff-c409-4bff-9bdf-f70d5e5cebde)
 
 c. Dungeon Generator (system.c).
     Dungeon di-generate acak dengan nilai sesuai rentang soal, dan disimpan dalam shared memory dungeon. 
@@ -483,6 +488,7 @@ c. Dungeon Generator (system.c).
     dungeons[i].def_reward = (rand() % 26) + 25;
     dungeons[i].exp_reward = (rand() % 151) + 150;
     ---
+![image](https://github.com/user-attachments/assets/32c8c88b-d2af-48e3-a375-31d1e35b9a66)
 
 d. Menampilkan Semua Dungeon (Admin).
      Admin bisa lihat seluruh dungeon beserta reward dan key-nya.
@@ -517,7 +523,20 @@ g. Hunter Battle (hunter.c).
    stat_a = hunter_data->atk + hunter_data->hp + hunter_data->def;
    int stat_b = target->atk + target->hp + target->def;
    ---
+   ![image](https://github.com/user-attachments/assets/2778e64c-9993-4f96-86e5-2a8ac8b235f2)
 
+h. Ban / Unban Hunter (system.c),dan notifikasi Dungeon 3 Detik Sekali (hunter.c)
+   ---
+   sleep(3);
 
+   ---
+   ![image](https://github.com/user-attachments/assets/70366583-db26-4f48-9b2c-7154308f94e6)
+
+i.Semua Shared Memory Terhapus Saat Sistem Dimatikan (system.c)
+ ---
+  shmctl(..., IPC_RMID, NULL);
+ ---
+
+![image](https://github.com/user-attachments/assets/adc738f4-e35e-421c-905f-05d5c0e92df9)
 
 
