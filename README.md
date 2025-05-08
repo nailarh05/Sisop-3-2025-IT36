@@ -360,5 +360,71 @@ e. Format Log Pengiriman
 
 ![image](https://github.com/user-attachments/assets/06495c33-d347-43c1-a410-e7dd45ef4c7d)
 
+###Soal 4
+
+a.  Registrasi dan Login Hunter
+    
+  ---
+  hunter_data->level = 1;
+  hunter_data->exp = 0;
+  hunter_data->atk = 10;
+  hunter_data->hp = 100;
+  hunter_data->def = 5;
+  ---
+b. Menampilkan Semua Data Hunter 
+    Admin bisa melihat semua hunter yang terdaftar lengkap dengan stat dan status    banned.
+    
+    ---
+    printf("Nama: %s | Level: %d | EXP: %d | ATK: %d | HP: %d | DEF: %d | Status: % s\n",
+       data[i].name, data[i].level, data[i].exp,
+       data[i].atk, data[i].hp, data[i].def,
+       data[i].banned ? "Banned" : "Aktif");
+    ---
+
+c. Dungeon Generator (system.c).
+    Dungeon di-generate acak dengan nilai sesuai rentang soal, dan disimpan dalam shared memory dungeon. 
+    ---
+    dungeons[i].min_level = (rand() % 5) + 1;
+    dungeons[i].atk_reward = (rand() % 51) + 100;
+    dungeons[i].hp_reward = (rand() % 51) + 50;
+    dungeons[i].def_reward = (rand() % 26) + 25;
+    dungeons[i].exp_reward = (rand() % 151) + 150;
+    ---
+
+d. Menampilkan Semua Dungeon (Admin).
+     Admin bisa lihat seluruh dungeon beserta reward dan key-nya.
+    
+    ---
+  printf("Dungeon %d: Nama: %s | Level Min: %d | EXP: %d | ATK: %d | HP: %d |   DEF: %d\n",
+  i + 1, dungeons[i].name, dungeons[i].min_level,
+   dungeons[i].exp_reward, dungeons[i].atk_reward,
+  dungeons[i].hp_reward, dungeons[i].def_reward);
+
+    ---
+
+e. Menampilkan Dungeon Sesuai Level Hunter.
+    Hunter hanya bisa melihat dungeon dengan min_level <= level hunter.
+    ---
+    if (hunter_data->level >= dungeons[i].min_level)
+
+   ---
+f. Menaklukkan Dungeon (hunter.c).
+   ---
+  if (hunter_data->exp >= 500) {
+    hunter_data->level++;
+    hunter_data->exp = 0;
+}
+    ---
+
+
+g. Hunter Battle (hunter.c).
+    Hitung total stat, hunter kalah dihapus, hunter menang ambil semua stat lawan.
+
+   ---
+   stat_a = hunter_data->atk + hunter_data->hp + hunter_data->def;
+   int stat_b = target->atk + target->hp + target->def;
+   ---
+
+
 
 
