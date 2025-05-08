@@ -453,7 +453,184 @@ e. Format Log Pengiriman
 
 ![image](https://github.com/user-attachments/assets/06495c33-d347-43c1-a410-e7dd45ef4c7d)
 
-###Soal 4
+###Soal 3
+
+  ## Script dungeon.c
+
+a.) Fungsi get_player
+```
+Player* get_player(int sock) {
+    for (int i = 0; i < player_count; i++) {
+        if (players[i].socket == sock) return &players[i];
+    }
+    players[player_count].socket = sock;
+    players[player_count].gold = 100;
+    players[player_count].base_damage = 10;
+    players[player_count].equipped = &weapon_list[0];
+    players[player_count].inventory[0] = &weapon_list[0];
+    players[player_count].inv_count = 1;
+    players[player_count].enemies_defeated = 0;
+    return &players[player_count++];
+}
+```
+  - Mencari player berdasarkan socket.
+  - Jika belum ada, data player baru dibuat:
+    - Gold awal: 100
+    - Senjata awal: weapon_list[0]
+    - Damage dasar: 10
+    - Inventory awal: 1 senjata
+    - Musuh dikalahkan: 0
+
+b.) Fungsi handle_client
+```
+void* handle_client(void* arg)
+```
+  - Fungsi ini dijalankan sebagai thread untuk menangani satu klien.
+
+c.) Fungsi main
+```
+int main() {
+    int server_fd, new_socket;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+
+    init_shop();
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
+
+    bind(server_fd, (struct sockaddr*)&address, sizeof(address));
+    listen(server_fd, 10);
+    printf("Server started on port %d\n", PORT);
+
+    while ((new_socket = accept(server_fd, (struct sockaddr*)&address, (socklen_t*)&addrlen))) {
+        pthread_t tid;
+        pthread_create(&tid, NULL, handle_client, &new_socket);
+    }
+
+    return 0;
+```
+  - Inisialisasi shop dengan init_shop().
+  - Membuat socket TCP pada port 8080.
+  - Mengikat socket ke alamat lokal dan mulai listening hingga 10 klien.
+  - Untuk setiap koneksi masuk:
+    - Membuat thread baru untuk handle_client.
+
+  ## Script shop.c
+
+a.) Fungsi init_shop
+```
+void init_shop() {
+    strcpy(weapon_list[0].name, "Fists"); weapon_list[0].price = 0; weapon_list[0].damage = 5; weapon_list[0].has_passive = 0;
+    strcpy(weapon_list[1].name, "Sword"); weapon_list[1].price = 50; weapon_list[1].damage = 15; weapon_list[1].has_passive = 0;
+    strcpy(weapon_list[2].name, "Axe"); weapon_list[2].price = 80; weapon_list[2].damage = 20; weapon_list[2].has_passive = 1; strcpy(weapon_list[2].passive, "Extra 5 Gold per Kill");
+    strcpy(weapon_list[3].name, "Dagger"); weapon_list[3].price = 30; weapon_list[3].damage = 10; weapon_list[3].has_passive = 1; strcpy(weapon_list[3].passive, "10%% Lifesteal");
+    strcpy(weapon_list[4].name, "Hammer"); weapon_list[4].price = 100; weapon_list[4].damage = 25; weapon_list[4].has_passive = 0;
+}
+```
+  - Menginisialisasi daftar senjata (weapon_list) sebanyak 5 jenis.
+
+  - Setiap senjata memiliki:
+    - name: Nama senjata
+    - price: Harga dalam gold
+    - damage: Tambahan damage senjata
+    - has_passive: 1 jika punya efek tambahan
+    - passive: Deskripsi efek pasif
+
+b.) Fungsi get_shop_display
+```
+void get_shop_display(char* out) {
+    strcpy(out, "Available Weapons:\n");
+    for (int i = 0; i < MAX_WEAPONS; i++) {
+        char line[200];
+        sprintf(line, "%s - Price: %d, Damage: %d%s\n", weapon_list[i].name, weapon_list[i].price, weapon_list[i].damage,
+                weapon_list[i].has_passive ? (char[100]) { sprintf((char[100]){}, ", Passive: %s", weapon_list[i].passive), (char[100]){} } : "");
+        strcat(out, line);
+    }
+```
+  - Mengisi string out dengan daftar senjata yang tersedia.
+
+c.) Fungsi buy_weapon
+```
+Weapon* buy_weapon(const char* name, int* gold) {
+    for (int i = 0; i < MAX_WEAPONS; i++) {
+        if (strcmp(weapon_list[i].name, name) == 0 && *gold >= weapon_list[i].price) {
+            *gold -= weapon_list[i].price;
+            return &weapon_list[i];
+        }
+    }
+    return NULL;
+}
+```
+  - Fungsi pembelian senjata berdasarkan nama:
+    - Mencari senjata yang namanya cocok
+    - Memeriksa apakah gold pemain cukup
+    - Jika cukup, gold dikurangi dan pointer ke senjata dikembalikan
+    - Jika gagal (tidak cukup gold atau nama salah), mengembalikan NUL
+
+  ## Script player.c
+  
+a.) Fungsi Menu
+```
+void menu(int sockfd) {
+    char buffer[MAX];
+    int choice;
+
+    while (1) {
+        printf("\n=== Main Menu ===\n");
+        printf("1. Show Stats\n");
+        printf("2. Shop\n");
+        printf("3. Inventory\n");
+        printf("4. Battle\n");
+        printf("5. Exit\n");
+        printf("Choose: ");
+        scanf("%d", &choice);
+        getchar(); // consume newline
+
+        sprintf(buffer, "%d", choice);
+        send(sockfd, buffer, strlen(buffer), 0);
+
+        if (choice == 5) break;
+
+        int valread = recv(sockfd, buffer, sizeof(buffer), 0);
+        buffer[valread] = '\0';
+        printf("%s\n", buffer);
+    }
+}
+```
+  - Pemain memilih opsi (input disimpan dalam choice)
+  - Pilihan dikirim ke server (send(sockfd, buffer, strlen(buffer), 0))
+  - Jika pilihan bukan 5 (exit), maka client:
+    - Menerima balasan dari server (recv)
+    - Mencetak isi buffer sebagai respon dari server
+
+b.) Fungsi Main
+```
+int main()
+```
+  - Membangun koneksi ke server:
+    
+```
+sockfd = socket(AF_INET, SOCK_STREAM, 0);
+```
+  - Membuat socket TCP (SOCK_STREAM)
+    
+```
+serv_addr.sin_family = AF_INET;
+serv_addr.sin_port = htons(PORT);
+serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+```
+  - Mengatur informasi IP dan port ke localhost (127.0.0.1:8080)
+
+```
+connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr))
+```
+  - Mencoba koneksi ke server. Jika gagal, program keluar dengan error.
+  - Setelah terkoneksi:
+    - Menjalankan menu(sockfd)
+    - Menutup koneksi setelah selesai (close(sockfd))
 
 ###Soal 4
 
