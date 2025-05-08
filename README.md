@@ -61,9 +61,13 @@ Karena anda adalah seorang professional programmer, anda mengikuti petunjuk yang
 a. Text file rahasia terdapat pada LINK BERIKUT, diperbolehkan untuk download/unzip secara manual. Contoh working directory setelah semuanya selesai akan terlihat sebagai berikut:
 .
 ├── client
+
 │   ├── 1744403652.jpeg
+
 │   ├── 1744403687.jpeg
+
 │   ├── image_client
+
 │   └── secrets
 │       ├── input_1.txt
 │       ├── input_2.txt
