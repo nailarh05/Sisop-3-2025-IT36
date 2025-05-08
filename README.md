@@ -21,24 +21,21 @@ Anggota Kelompok
 2. Praktikan diharapkan membuat laporan penjelasan dan penyelesaian soal dalam bentuk Readme (github).
 3. Format nama repository github “Sisop-[Nomor Modul]-2025-[Nama Kelompok]” (contoh:Sisop-3-2025-IT01).
 4. Struktur repository seperti berikut:
-		—**soal_1:**
-				—image_client.c
-				—image_server.c
-                                    
-   —**soal_2:**
-        —dispatcher.c
-        — delivery_agent.c
-			
-  —**soal_3:**	
-       — dungeon.c
-	     — shop.c/shop.h
-	     — player.c
-
-  —**soal_4:**
-      —system.c
-      —hunter.c
-
-  —**assets**
+   - **soal_1:**
+     - `image_client.c`
+     - `image_server.c`
+   - **soal_2:**
+     - `dispatcher.c`
+     - `delivery_agent.c`
+   - **soal_3:**
+     - `dungeon.c`
+     - `shop.c/shop.h`
+     - `player.c`
+   - **soal_4:**
+     - `system.c`
+     - `hunter.c`
+    
+   - **assets**
 
 5. Jika melanggar struktur repo akan dianggap sama dengan curang dan menerima konsekuensi sama dengan melakukan kecurangan. Folder assets bersifat opsional dan hanya diisi dengan dokumentasi pengerjaan yang akan diletakkan di readme. Tidak ada format khusus untuk penamaan file dalam assets
 Setelah pengerjaan selesai, semua script bash, awk, dan file yang berisi cron job ditaruh di github masing - masing kelompok, dan link github diletakkan pada form yang disediakan. Pastikan github di setting ke publik.
