@@ -293,6 +293,8 @@ if (argc == 2 && strcmp(argv[1], "-init") == 0) {
 }
    ---
 
+![Screenshot 2025-05-08 223126](https://github.com/user-attachments/assets/5cf03c93-d9ec-484e-a9e0-e4fb33e9063e)
+
 b. Pengiriman Bertipe Express (Otomatis oleh AGENT A/B/C)
 
    ---
@@ -311,6 +313,7 @@ void *agent_thread(void *arg) {
 }
 
    ---
+![Screenshot 2025-05-08 223342](https://github.com/user-attachments/assets/175c27ab-7243-47e7-b9aa-397101b3c13c)
 
 c.  Pengiriman Bertipe Reguler (Manual oleh User)
 
@@ -327,6 +330,7 @@ c.  Pengiriman Bertipe Reguler (Manual oleh User)
 }
 
    ---
+![image](https://github.com/user-attachments/assets/7838d5a0-aee6-4665-8669-cf6c39745396)
 
 d. Mengechek Setatus Pesanan
 
@@ -338,6 +342,7 @@ d. Mengechek Setatus Pesanan
 }
 
    ---
+![image](https://github.com/user-attachments/assets/ae1920ed-33d4-4576-8dd5-ef29585134ac)
 
 e. Format Log Pengiriman
    ---
@@ -353,6 +358,7 @@ e. Format Log Pengiriman
         fprintf(log, "[...][AGENT %s] Reguler package delivered to %s in %s\n", ...);
    ---
 
+![image](https://github.com/user-attachments/assets/06495c33-d347-43c1-a410-e7dd45ef4c7d)
 
 
 
