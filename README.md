@@ -91,7 +91,60 @@ Karena anda adalah seorang professional programmer, anda mengikuti petunjuk yang
   ![Image](https://github.com/user-attachments/assets/e2b6421c-03d1-48f7-993b-3449966581ea)
 
 
-2. 
+2. Tahun 2025, di tengah era perdagangan serba cepat, berdirilah sebuah perusahaan ekspedisi baru bernama RushGo. RushGo ingin memberikan layanan ekspedisi terbaik dengan 2 pilihan, Express (super cepat) dan Reguler (standar). Namun, pesanan yang masuk sangat banyak! Mereka butuh sebuah sistem otomatisasi pengiriman, agar agen-agen mereka tidak kewalahan menangani pesanan yang terus berdatangan. Kamu ditantang untuk membangun Delivery Management System untuk RushGo.
+
+Sistem ini terdiri dari dua bagian utama:
+
+  - delivery_agent.c untuk agen otomatis pengantar Express
+  - dispatcher.c untuk pengiriman dan monitoring pesanan oleh user
+
+  a. Mengunduh File Order dan Menyimpannya ke Shared Memory.
+  
+Untuk memulai, Anda perlu mengelola semua orderan yang masuk dengan menggunakan shared memory.
+
+  - Unduh file delivery_order.csv (https://drive.google.com/file/d/1OJfRuLgsBnIBWtdRXbRsD2sG6NhMKOg9/view?usp=sharing)
+  - Setelah file CSV diunduh, program Anda harus membaca seluruh data dari CSV dan menyimpannya ke dalam shared memory.
+
+  b. Pengiriman Bertipe Express
+
+  - RushGo memiliki tiga agen pengiriman utama: AGENT A, AGENT B, dan AGENT C.
+  - Setiap agen dijalankan sebagai thread terpisah.
+  - Agen-agen ini akan secara otomatis:
+    - Mencari order bertipe Express yang belum dikirim.
+    - Mengambil dan mengirimkannya tanpa intervensi user.
+  - Setelah sukses mengantar, program harus mencatat log di delivery.log dengan format:
+
+  ![Image](https://github.com/user-attachments/assets/d5f6d3fc-52f0-47f8-b6ac-ebf48f85aae0)
+
+  c. Pengiriman Bertipe Reguler
+
+  Berbeda dengan Express, untuk order bertipe Reguler, pengiriman dilakukan secara manual oleh user.
+  - User dapat mengirim permintaan untuk mengantar order Reguler dengan memberikan perintah deliver dari dispatcher. 
+  Penggunaan:
+  ./dispatcher -deliver [Nama]
+
+  - Pengiriman dilakukan oleh agent baru yang namanya adalah nama user.
+  - Setelah sukses mengantar, program harus mencatat log di delivery.log dengan format:
+
+  ![Image](https://github.com/user-attachments/assets/e481d669-b7ea-42c0-9de7-61f212f1573e)
+
+  d. Mengecek Status Pesanan
+  
+  Dispatcher juga harus bisa mengecek status setiap pesanan.
+  Penggunaan:
+  ./dispatcher -status [Nama]
+
+  ![Image](https://github.com/user-attachments/assets/22893330-6ab4-4ac8-a820-3edb4d64ded1)
+
+  e. Melihat Daftar Semua Pesanan
+  
+  Untuk memudahkan monitoring, program dispatcher bisa menjalankan perintah list untuk melihat semua order disertai nama dan statusnya.
+  Penggunaan:
+  ./dispatcher -list
+
+
+
+
 
 
 
