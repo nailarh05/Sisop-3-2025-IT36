@@ -277,8 +277,81 @@ Setiap dungeon akan disimpan dalam shared memory sendiri yang berbeda dan dapat 
 
 
 
+### Soal 2 
+a. Mengunduh file delivery_order.csv & menyimpan ke sherd memory 
 
+   ---
+   void load_orders_from_csv(const char *filename) {
+    ...
+    sscanf(line, "%[^,],%[^,],%[^\n]", orders[*order_count].name,      orders[*order_count].address, orders[*order_count].type);
+    strcpy(orders[*order_count].status, "Pending");
+    ...
+}
 
+if (argc == 2 && strcmp(argv[1], "-init") == 0) {
+    load_orders_from_csv("delivery_order.csv");
+}
+   ---
+
+b. Pengiriman Bertipe Express (Otomatis oleh AGENT A/B/C)
+
+   ---
+   pthread_t tid[3];
+char *agents[] = {"A", "B", "C"};
+for (int i = 0; i < 3; ++i)
+    pthread_create(&tid[i], NULL, agent_thread, agents[i]);
+
+void *agent_thread(void *arg) {
+    ...
+    if (strcmp(orders[i].type, "Express") == 0 &&
+        strcmp(orders[i].status, "Pending") == 0) {
+        snprintf(orders[i].status, sizeof(orders[i].status), "Agent %s", agent_name);
+        write_log(agent_name, orders[i].name, orders[i].address);
+    }
+}
+
+   ---
+
+c.  Pengiriman Bertipe Reguler (Manual oleh User)
+
+   ---
+  } else if (argc == 3 && strcmp(argv[1], "-deliver") == 0) {
+    ...
+    if (strcmp(orders[i].type, "Reguler") == 0 &&
+        strcmp(orders[i].status, "Pending") == 0) {
+        char *username = getenv("USER");
+        if (!username) username = "UnknownUser";
+        snprintf(orders[i].status, sizeof(orders[i].status), "AGENT %s", username);
+        write_log(username, orders[i].name, orders[i].address, "Reguler");
+    }
+}
+
+   ---
+
+d. Mengechek Setatus Pesanan
+
+   ---
+   } else if (argc == 2 && strcmp(argv[1], "-list") == 0) {
+    for (int i = 0; i < *order_count; ++i) {
+        printf("%s - %s\n", orders[i].name, orders[i].status);
+    }
+}
+
+   ---
+
+e. Format Log Pengiriman
+   ---
+  void write_log(...) {
+    fprintf(log, "[%02d/%02d/%04d %02d:%02d:%02d] [%s] Express package delivered to %s in %s\n",
+            ..., agent, name, address);
+      
+          
+  id write_log(...) {
+    if (strcmp(type, "Express") == 0)
+        ...
+    else
+        fprintf(log, "[...][AGENT %s] Reguler package delivered to %s in %s\n", ...);
+   ---
 
 
 
