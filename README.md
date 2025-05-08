@@ -97,6 +97,6 @@ Gagal menemukan file untuk dikirim ke client
 Server menyimpan log semua percakapan antara image_server.c dan image_client.c di dalam file server.log dengan format:
 [Source][YYYY-MM-DD hh:mm:ss]: [ACTION] [Info]
 # Contoh:
-[Client][2025-03-12 02:23:17]: [DECRYPT] [Text data] [Server][2025-03-12 02:23:17]: [SAVE] [1744399397.jpeg] [Client][2025-03-12 02:23:26]: [DOWNLOAD] [1744399397.jpeg] [Server][2025-03-12 02:23:26]: [UPLOAD] [1744399397.jpeg] [Client][2025-03-12 02:23:31]: [DECRYPT] [Text data] [Server][2025-03-12 02:23:31]: [SAVE] [1744399411.jpeg] [Client][2025-03-12 02:23:38]: [DOWNLOAD] [1744399411.jpeg] [Server][2025-03-12 02:23:38]: [UPLOAD] [1744399411.jpeg] [Client][2025-03-12 02:23:39]: [EXIT] [Client requested to exit]
+
 
 
