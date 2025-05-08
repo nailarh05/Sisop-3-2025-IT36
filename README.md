@@ -274,7 +274,100 @@ Setiap dungeon akan disimpan dalam shared memory sendiri yang berbeda dan dapat 
 
 ### Soal 1
 
+  ## Script delivery_agent.c
 
+a.) Fungsi Pengiriman Paket Express oleh Agen
+```
+void *agent_thread(void *arg) {
+    char *agent_name = (char *) arg;
+
+    while (1) {
+        for (int i = 0; i < *order_count; ++i) {
+            if (strcmp(orders[i].type, "Express") == 0 &&
+                strcmp(orders[i].status, "Pending") == 0) {
+                // tandai sebagai delivered
+                snprintf(orders[i].status, sizeof(orders[i].status), "Agent %s", agent_name);
+                write_log(agent_name, orders[i].name, orders[i].address);
+                sleep(1);
+            }
+        }
+        sleep(1);
+    }
+
+    return NULL;
+}
+```
+  - Fungsi ini dijalankan sebagai thread oleh masing-masing agen pengantar.
+    - agent_name: Nama agen (misal "A", "B", atau "C") yang diberikan sebagai argumen thread.
+  - Melakukan looping terus-menerus untuk:
+    - Memeriksa semua pesanan dalam shared memory.
+    - Jika ada pesanan bertipe Express dan berstatus Pending, maka:
+      - Status pesanan diubah menjadi "Agent X" (misal "Agent A").
+      - Log pengiriman ditulis ke file delivery.log.
+      - Menunggu selama 1 detik agar tidak memproses terlalu cepat.
+
+  - Memberi delay 1 detik antar pemeriksaan ulang pesanan.
+   
+b.) Fungsi Logging Pengiriman
+```
+void write_log(const char *agent, const char *name, const char *address) {
+    FILE *log = fopen("delivery.log", "a");
+    if (!log) return;
+
+    time_t now = time(NULL);
+    struct tm *t = localtime(&now);
+
+    fprintf(log, "[%02d/%02d/%04d %02d:%02d:%02d] [%s] Express package delivered to %s in %s\n",
+            t->tm_mday, t->tm_mon + 1, t->tm_year + 1900,
+            t->tm_hour, t->tm_min, t->tm_sec, agent, name, address);
+
+    fclose(log);
+}
+```
+  - Mencatat informasi pengiriman ke file delivery.log dalam format waktu dan detail pengiriman.
+  - Format log:
+    [DD/MM/YYYY HH:MM:SS] [Agent] Express package delivered to Nama in Alamat
+
+c.) Struktur Data Pesanan
+```
+typedef struct {
+    char name[MAX_NAME];
+    char address[MAX_ADDRESS];
+    char type[10];
+    char status[64];
+} Order;
+```
+  - Struktur untuk menyimpan satu data pesanan, meliputi:
+    - name: Nama penerima.
+    - address: Alamat tujuan.
+    - type: Jenis pengiriman, seperti "Express".
+    - status: Status pesanan ("Pending", atau nama agen yang mengantar).
+
+d.) Fungsi Utama (main)
+```
+int main() {
+    key_t key = ftok("sharedfile", 65);
+    int shmid = shmget(key, sizeof(Order) * MAX_ORDER + sizeof(int), 0666);
+    orders = (Order *) shmat(shmid, NULL, 0);
+    order_count = (int *)(orders + MAX_ORDER);
+
+    pthread_t tid[3];
+    char *agents[] = {"A", "B", "C"};
+
+    for (int i = 0; i < 3; ++i)
+        pthread_create(&tid[i], NULL, agent_thread, agents[i]);
+
+    for (int i = 0; i < 3; ++i)
+        pthread_join(tid[i], NULL);
+
+    shmdt(orders);
+    return 0;
+}
+```
+  - Mengakses shared memory untuk membaca data pesanan (orders) dan jumlah pesanan (order_count).
+  - Membuat 3 thread agen ("A", "B", "C") yang akan menjalankan fungsi agent_thread.
+  - Menunggu semua thread selesai (meskipun dalam kasus ini akan berjalan terus karena while(1)).
+  - Melepas shared memory dengan shmdt.
 
 
 ### Soal 2 
