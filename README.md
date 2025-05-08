@@ -1,7 +1,7 @@
-# SISOP-1-2024-IT36
+# SISOP-3-2025-IT36
 
 Anggota Kelompok
-|     Nrp    |                Nama              |
+|     NRP    |                Nama              |
 |-----       | -----                            |
 |5027241106  | Mohammad Abyan Ranuaji           |
 |5027241078  | Naila Raniyah Hanan              |
@@ -141,6 +141,85 @@ Untuk memulai, Anda perlu mengelola semua orderan yang masuk dengan menggunakan 
   Untuk memudahkan monitoring, program dispatcher bisa menjalankan perintah list untuk melihat semua order disertai nama dan statusnya.
   Penggunaan:
   ./dispatcher -list
+
+3. The Lost Dungeon
+
+Suatu pagi, anda menemukan jalan setapak yang ditumbuhi lumut dan hampir tertutup semak. Rasa penasaran membawamu mengikuti jalur itu, hingga akhirnya anda melihatnya: sebuah kastil tua, tertutup akar dan hampir runtuh, tersembunyi di tengah hutan. Gerbangnya terbuka seolah memanggilmu masuk.
+
+Di dalam, anda menemukan pintu batu besar dengan simbol-simbol aneh yang terasa… hidup. Setelah mendorongnya dengan susah payah, anda pun menuruni tangga batu spiral yang dalam dan gelap. Di ujungnya, anda menemukan sebuah dunia baru: dungeon bawah tanah yang sudah tertinggal sangat lama.
+
+Anda tidak tahu bagaimana anda dapat berada di situasi ini, tetapi didorong oleh rasa ingin tahu dan semangat, apa pun yang menunggumu di bawah sana, anda akan melawan.
+
+  a. Entering the dungeon
+
+dungeon.c akan bekerja sebagai server yang dimana client (player.c) dapat terhubung melalui RPC. dungeon.c akan memproses segala perintah yang dikirim oleh player.c. Lebih dari 1 client dapat mengakses server.
+
+  b. Sightseeing 
+  
+Anda melihat disekitar dungeon dan menemukan beberapa hal yang menarik seperti toko senjata dan pintu dengan aura yang cukup seram. Ketika player.c dijalankan, ia akan terhubung ke dungeon.c dan menampilkan sebuah main menu seperti yang dicontohkan di bawah ini (tidak harus mirip, dikreasikan sesuai kreatifitas masing-masing praktikan).
+
+  ![Image](https://github.com/user-attachments/assets/99fad34e-4b52-4b80-aeb5-840441e94916)
+
+  c. Status Check
+  
+Melihat bahwa terdapat sebuah toko senjata, anda mengecek status diri anda dengan harapan anda masih memiliki sisa uang untuk membeli senjata. Jika opsi Show Player Stats dipilih, maka program akan menunjukan Uang yang dimiliki (Jumlah dibebaskan), senjata yang sedang digunakan, Base Damage, dan jumlah musuh yang telah dimusnahkan. 
+
+  ![Image](https://github.com/user-attachments/assets/c8a13f92-cecb-4dbf-9ec8-a89309a14668)
+
+  d. Weapon Shop
+  
+Ternyata anda memiliki sisa uang dan langsung pergi ke toko senjata tersebut untuk membeli senjata. Terdapat 5 pilihan senjata di toko tersebut dan beberapa dari mereka memiliki passive yang unik. Disaat opsi Shop dipilih, program akan menunjukan senjata apa saja yang dapat dibeli beserta harga, damage, dan juga passive (jika ada). List senjata yang ada dan dapat dibeli beserta logic/command untuk membeli senjata tersebut diletakan di code shop.c/shop.h yang nanti akan dipakai oleh dungeon.c.
+
+  ![Image](https://github.com/user-attachments/assets/d9bf4395-754c-48af-99f1-1b937d083dee)
+
+Notes: praktikan dibebaskan untuk penamaan, harga, damage, dan juga passive dari senjata-senjata yang ada. Yang penting harus terdapat 5 atau lebih senjata dengan minimal 2 senjata yang memiliki passive.
+
+  e. Handy Inventory
+  
+Setelah membeli senjata di toko tadi, anda membuka ransel anda untuk memakai senjata tersebut. Jika opsi View Inventory dipilih, program akan menunjukan senjata apa saja yang dimiliki dan dapat dipakai (jika senjata memiliki passive, tunjukan juga passive tersebut).
+
+  ![image](https://github.com/user-attachments/assets/01fa5005-4dec-4c05-ba42-b3451a7e93c4)
+
+Lalu apabila opsi Show Player Stats dipilih saat menggunakan weapon maka Base Damage player akan berubah dan jika memiliki passive, maka akan ada status tambahan yaitu Passive.
+
+  ![Image](https://github.com/user-attachments/assets/a18a1b1c-4ed3-4629-a4ad-8cd7718adfa1)
+
+  f. Enemy Encounter
+  
+Anda sekarang sudah siap untuk melewati pintu yang seram tadi, disaat anda memasuki pintu tersebut, anda langsung ditemui oleh sebuah musuh yang bukan sebuah manusia. Dengan tekad yang bulat, anda melawan musuh tersebut. Saat opsi Battle Mode dipilih, program akan menunjukan health-bar musuh serta angka yang menunjukan berapa darah musuh tersebut dan menunggu input dengan opsi attack untuk melakukan sebuah serangan dan juga exit untuk keluar dari Battle Mode. Apabila darah musuh berkurang, maka health-bar musuh akan berkurang juga.
+
+  ![Image](https://github.com/user-attachments/assets/fe5443ec-15e6-4511-a9f9-a1963546a4f9)
+
+Jika darah musuh sudah 0, maka program akan menunjukan rewards berupa berapa banyak gold yang didapatkan lalu akan muncul musuh lagi.
+
+  ![Image](https://github.com/user-attachments/assets/9de76e45-8e04-4682-9ce3-ea1655d999b3)
+
+  g. Other Battle Logic
+  
+  - Health & Rewards
+    
+Untuk darah musuh, seberapa banyak darah yang mereka punya dibuat secara random, contoh: 50-200 HP. Lakukan hal yang sama untuk rewards. 
+
+  - Damage Equation
+    
+Untuk damage, gunakan base damage sebagai kerangka awal dan tambahkan rumus damage apapun (dibebaskan, yang pasti perlu random number agar hasil damage bervariasi). Lalu buatlah logic agar setiap serangan memiliki kesempatan untuk Critical yang membuat damage anda 2x lebih besar.
+
+![Image](https://github.com/user-attachments/assets/db5245f5-0a7f-4ab3-8fb5-84e2eca9e86e)
+
+  - Passive
+    
+Jika senjata yang dipakai memiliki Passive setiap kali passive tersebut menyala, maka tunjukan bahwa passive tersebut aktif.
+
+  ![Image](https://github.com/user-attachments/assets/98bd922b-d43b-4e63-897c-e6c921653ee0)
+
+  h. Error Handling
+  
+Berikan error handling untuk opsi-opsi yang tidak ada.
+Contoh:
+
+  ![Image](https://github.com/user-attachments/assets/a27f4cc9-ce0e-4021-8d01-0f7806176d1b)
+
+
 
 
 
